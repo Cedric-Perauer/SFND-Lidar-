@@ -1,6 +1,7 @@
 /* \author Aaron Brown */
 // Quiz on implementing simple RANSAC line fitting
 
+#include <bits/stdc++.h>
 #include "../../render/render.h"
 #include <unordered_set>
 #include "../../processPointClouds.h"
@@ -63,13 +64,58 @@ pcl::visualization::PCLVisualizer::Ptr initScene()
 
 std::unordered_set<int> Ransac(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int maxIterations, float distanceTol)
 {
-	std::unordered_set<int> inliersResult;
+	std::unordered_set<int> inliersResult;   //hold best inliers (most inliers)
 	srand(time(NULL));
 	
 	// TODO: Fill in this function
-
+     
 	// For max iterations 
+    while(maxIterations--) {
 
+		//randomly pick two points
+		std::unordered_set<int> inliers;   //holds index for point of cloud 
+		while(inliers.size() <2)
+		    inliers.insert(rand()%(cloud->points.size()));    //insert random points, modulu returns between 0 and points.size() from cloud  
+	    float x1,x2, y1, y2;  //start and end point
+
+		auto itr = inliers.begin(); //pointer to beginning of inliers
+        
+		//dereference pointer itr to get value of index
+		x1 = cloud->points[*itr].x;
+		y1 = cloud->points[*itr].y;
+		++itr;
+        x2 = cloud->points[*itr].x;
+		y2 = cloud->points[*itr].y;
+		
+		float a,b,c; 
+		a = y1-y2;
+		b = x2-x1; 
+		c = (x1*y2-x2*y1);
+        
+
+		for(int i = 0 ; i < cloud->points.size() ; i++) {
+
+			if(inliers.count(i)>0){
+				continue;
+			}
+
+			pcl::PointXYZ point= cloud->points[i];
+			float px,py,d;  //point coordiantes and distance measurement 
+			px = point.x;
+			py = point.y; 
+            
+			d = fabs(a*px+b*py+c)/(sqrt(a*a+b*b));
+			
+			if(d<=distanceTol) {
+				inliers.insert(i);   //add to inliers if under distance threshold
+			}
+		}
+
+		if(inliers.size() > inliersResult.size()){
+			inliersResult = inliers;                //if 
+		}
+
+	} 
 	// Randomly sample subset and fit line
 
 	// Measure distance between every point and fitted line
