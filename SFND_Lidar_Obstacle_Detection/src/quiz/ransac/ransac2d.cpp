@@ -168,7 +168,7 @@ std::unordered_set<int> Ransac3D(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int 
 		j = (z2-z1) *(x3-x1) - (x2-x1) * (z3-z1); 
         k = (x2-x1) *(y3-y1) - (y2-y1) * (x3-x1);
 
-´    
+
 		float a,b,c,d,distance;
 		a = h; 
 		b = j; 
@@ -193,7 +193,7 @@ std::unordered_set<int> Ransac3D(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int 
 			if(distance<=distanceTol) {
 				inliers.insert(i);   //add to inliers if under distance threshold
 			}
-			 std::cout << "Iteration :" << i << " with : " << inliers.size() << " points " << std::endl;
+			 //std::cout << "Iteration :" << i << " with : " << inliers.size() << " points " << std::endl;
 		}
 
 		if(inliers.size() > inliersResult.size()){
