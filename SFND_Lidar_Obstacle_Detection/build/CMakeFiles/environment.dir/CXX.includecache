@@ -6,21 +6,21 @@
 
 #IncludeRegexTransform: 
 
-/home/cedric/Sensor Fusion ND/SFND_Lidar_Obstacle_Detection/src/environment.cpp
+/home/cedric/SFND/SFND_Lidar_Obstacle_Detection/src/environment.cpp
 sensors/lidar.h
-/home/cedric/Sensor Fusion ND/SFND_Lidar_Obstacle_Detection/src/sensors/lidar.h
+/home/cedric/SFND/SFND_Lidar_Obstacle_Detection/src/sensors/lidar.h
 render/render.h
-/home/cedric/Sensor Fusion ND/SFND_Lidar_Obstacle_Detection/src/render/render.h
+/home/cedric/SFND/SFND_Lidar_Obstacle_Detection/src/render/render.h
 processPointClouds.h
-/home/cedric/Sensor Fusion ND/SFND_Lidar_Obstacle_Detection/src/processPointClouds.h
+/home/cedric/SFND/SFND_Lidar_Obstacle_Detection/src/processPointClouds.h
 processPointClouds.cpp
-/home/cedric/Sensor Fusion ND/SFND_Lidar_Obstacle_Detection/src/processPointClouds.cpp
+/home/cedric/SFND/SFND_Lidar_Obstacle_Detection/src/processPointClouds.cpp
 
-/home/cedric/Sensor Fusion ND/SFND_Lidar_Obstacle_Detection/src/processPointClouds.cpp
+/home/cedric/SFND/SFND_Lidar_Obstacle_Detection/src/processPointClouds.cpp
 processPointClouds.h
-/home/cedric/Sensor Fusion ND/SFND_Lidar_Obstacle_Detection/src/processPointClouds.h
+/home/cedric/SFND/SFND_Lidar_Obstacle_Detection/src/processPointClouds.h
 
-/home/cedric/Sensor Fusion ND/SFND_Lidar_Obstacle_Detection/src/processPointClouds.h
+/home/cedric/SFND/SFND_Lidar_Obstacle_Detection/src/processPointClouds.h
 pcl/io/pcd_io.h
 -
 pcl/common/common.h
@@ -50,21 +50,21 @@ ctime
 chrono
 -
 render/box.h
-/home/cedric/Sensor Fusion ND/SFND_Lidar_Obstacle_Detection/src/render/box.h
+/home/cedric/SFND/SFND_Lidar_Obstacle_Detection/src/render/box.h
 
-/home/cedric/Sensor Fusion ND/SFND_Lidar_Obstacle_Detection/src/render/box.h
+/home/cedric/SFND/SFND_Lidar_Obstacle_Detection/src/render/box.h
 Eigen/Geometry
 -
 
-/home/cedric/Sensor Fusion ND/SFND_Lidar_Obstacle_Detection/src/render/render.cpp
+/home/cedric/SFND/SFND_Lidar_Obstacle_Detection/src/render/render.cpp
 render.h
-/home/cedric/Sensor Fusion ND/SFND_Lidar_Obstacle_Detection/src/render/render.h
+/home/cedric/SFND/SFND_Lidar_Obstacle_Detection/src/render/render.h
 
-/home/cedric/Sensor Fusion ND/SFND_Lidar_Obstacle_Detection/src/render/render.h
+/home/cedric/SFND/SFND_Lidar_Obstacle_Detection/src/render/render.h
 pcl/visualization/pcl_visualizer.h
 -
 box.h
-/home/cedric/Sensor Fusion ND/SFND_Lidar_Obstacle_Detection/src/render/box.h
+/home/cedric/SFND/SFND_Lidar_Obstacle_Detection/src/render/box.h
 iostream
 -
 vector
@@ -72,9 +72,9 @@ vector
 string
 -
 
-/home/cedric/Sensor Fusion ND/SFND_Lidar_Obstacle_Detection/src/sensors/lidar.h
+/home/cedric/SFND/SFND_Lidar_Obstacle_Detection/src/sensors/lidar.h
 ../render/render.h
-/home/cedric/Sensor Fusion ND/SFND_Lidar_Obstacle_Detection/src/render/render.h
+/home/cedric/SFND/SFND_Lidar_Obstacle_Detection/src/render/render.h
 ctime
 -
 chrono
