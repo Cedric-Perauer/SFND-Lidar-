@@ -35,9 +35,13 @@ struct KdTree
 		}
 		else
 		{
-          bool even = (depth%2); //using bool, if value is even even=0 and then x is used, y if otherwise
+		  //using bool, for 2D if value is even even=0 and then x is used, y if otherwise
+          //bool even = (depth%2);
+
+		  //for 3D can't use bool, will use normal int
+		  int mod = depth%3;
           
-		  point[even] >= (*node)->point[even] ? helper_insert(&((*node)->right),point,id,depth+1) : helper_insert(&((*node)->left),point,id,depth+1);
+		  point[mod] >= (*node)->point[mod] ? helper_insert(&((*node)->right),point,id,depth+1) : helper_insert(&((*node)->left),point,id,depth+1);
 		     
 		}
 
@@ -53,30 +57,31 @@ struct KdTree
         
 	}
 
-	float distance(std::pair<float,float> a, std::pair<float,float> b)
+	float distance(std::vector<float> a, std::vector<float> b)
 	{
-		return sqrt(pow(a.first-b.first,2)+pow(a.second-b.second,2));
+		return sqrt(pow(a[0]-b[0],2)+pow(a[1]-b[1],2),pow(a[2]-b[2],2));
 	}
 
 	void search_helper(std::vector<float> target, Node *node, std::vector<int> &ids, int depth, float Tol) 
 	{
 		if(node!=NULL)
 		{   //see if point is within Threshold
-			if((node->point[0]>= (target[0]-Tol)) && (node->point[0] <= (target[0]+Tol)) && (node->point[1]>= (target[1]-Tol)) && (node->point[1] <= (target[1]+Tol)))  
+			if((node->point[0]>= (target[0]-Tol)) && (node->point[0] <= (target[0]+Tol)) && (node->point[1]>= (target[1]-Tol)) && (node->point[1] <= (target[1]+Tol))
+			&& (node->point[2]>= (target[2]-Tol)) && (node->point[2] <= (target[2]+Tol)))  
 			{  
-                 float d = distance(std::pair<float,float> {node->point[0],node->point[1]}, std::pair<float,float> {target[0],target[1]});
+                 float d = distance(std::vector<float> {node->point[0],node->point[1],node->point[2]}, std::vector<float> {target[0],target[1],target[2]});
 				 if(d <= Tol)
 				 {
 					 ids.emplace_back(node->id);
 				 }
 			}
 
-			if((target[depth%2]-Tol) < node->point[depth%2])
+			if((target[depth%3]-Tol) < node->point[depth%3])
 			{
 				search_helper(target,node->left,ids,depth+1,Tol);
 			}
 
-			if((target[depth%2]+Tol) > node->point[depth%2])
+			if((target[depth%3]+Tol) > node->point[depth%3])
 			{
 				search_helper(target,node->right,ids,depth+1,Tol);
 			}

@@ -8,6 +8,7 @@
 // using templates for processPointClouds so also include .cpp to help linker
 #include "processPointClouds.cpp"
 
+
 std::vector<Car> initHighway(bool renderScene, pcl::visualization::PCLVisualizer::Ptr& viewer)
 {
 
@@ -52,11 +53,25 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)
   
     // TODO:: Create point processor
     ProcessPointClouds<pcl::PointXYZ> Point_Processor;  
-    std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr, pcl::PointCloud<pcl::PointXYZ>::Ptr> segmentCloud = Point_Processor.SegmentPlane(inputCloud, 100, 0.2);
+    //std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr, pcl::PointCloud<pcl::PointXYZ>::Ptr> segmentCloud = Point_Processor.SegmentPlane(inputCloud, 100, 0.2); //pcl Function for testing
+    std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr, pcl::PointCloud<pcl::PointXYZ>::Ptr> segmentCloud = Point_Processor.RANSAC_Segmentation(inputCloud,100,0.18); 
+    //had to change distance tolerance to 0.18 to receive last point of small cluster 
+       
+
+    
     renderPointCloud(viewer,segmentCloud.first,"obstCloud",Color(1,0,0));
     renderPointCloud(viewer,segmentCloud.second,"planeCloud",Color(0,1,0));
      
-    std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> cloudClusters = Point_Processor.Clustering(segmentCloud.first,1.0,3,30);
+
+    KdTree* tree = new KdTree;
+  
+    for (int i=0; i<segmentCloud.first->points.size(); i++) 
+    	tree->insert(segmentCloud.first->points[i],i); 
+    
+
+    
+   //std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> cloudClusters = Point_Processor.Clustering(segmentCloud.first,1.0,3,30);
+   std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> cloudClusters = Point_Processor.euclideanCluster(segmentCloud.first, tree, 1.0,3, 30);
 
     int clusterId = 0; 
     std::vector<Color> colors = {Color(0,0,1),Color(1,0,1),Color(1,1,0)};
@@ -66,6 +81,9 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)
         std::cout << "Cluster Size ";        
         Point_Processor.numPoints(cluster);
         renderPointCloud(viewer,cluster,"obstCloud"+std::to_string(clusterId),colors[clusterId]);
+        //render BB
+        Box box = Point_Processor.BoundingBox(cluster);
+        renderBox(viewer,box,clusterId);
         ++clusterId;
     }
 }
