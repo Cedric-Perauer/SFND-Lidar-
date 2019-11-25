@@ -325,7 +325,7 @@ void ProcessPointClouds<PointT>::Proximity(int i,typename pcl::PointCloud<PointT
 template<typename PointT>
 std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::euclideanCluster(typename pcl::PointCloud<PointT>::Ptr cloud, KdTree* tree, float distanceTol, int minSize, int maxSize)
 
-{
+{   auto startTime = std::chrono::steady_clock::now();
 
 	// TODO: Fill out this function to return list of indices for each cluster
 
@@ -351,20 +351,24 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::e
 
                 Cluster->width = Cluster->points.size();
                 Cluster->height = 1; 
+                Cluster->is_dense = true;        
                 clusters.push_back(Cluster); //add cluster to Clusters list 
             }
 
             else
             {
-                for(size_t j = 1; j <idx.size();j++)  //loop through points of cluster
+                for(size_t j = 0; j <idx.size();j++)  //loop through points of cluster
                 {
                     processed[idx[j]] = false; 
                 }     
             }
 
         }
-     
     }
-             
+
+    auto endTime = std::chrono::steady_clock::now();
+    auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
+    std::cout << "Euclidean Clustering took " << elapsedTime.count() << " milliseconds" << std::endl;
+    
 	return clusters;
 }

@@ -54,8 +54,8 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)
     // TODO:: Create point processor
     ProcessPointClouds<pcl::PointXYZ> Point_Processor;  
     //std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr, pcl::PointCloud<pcl::PointXYZ>::Ptr> segmentCloud = Point_Processor.SegmentPlane(inputCloud, 100, 0.2); //pcl Function for testing
-    std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr, pcl::PointCloud<pcl::PointXYZ>::Ptr> segmentCloud = Point_Processor.RANSAC_Segmentation(inputCloud,100,0.18); 
-    //had to change distance tolerance to 0.18 to receive last point of small cluster 
+    std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr, pcl::PointCloud<pcl::PointXYZ>::Ptr> segmentCloud = Point_Processor.RANSAC_Segmentation(inputCloud,100,0.19); 
+ 
        
 
     
@@ -71,7 +71,9 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)
 
     
    //std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> cloudClusters = Point_Processor.Clustering(segmentCloud.first,1.0,3,30);
-   std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> cloudClusters = Point_Processor.euclideanCluster(segmentCloud.first, tree, 1.0,3, 30);
+
+   //TO-DO : own EC algorithm 
+   std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> cloudClusters = Point_Processor.euclideanCluster(segmentCloud.first, tree, 1.01,3, 30);
 
     int clusterId = 0; 
     std::vector<Color> colors = {Color(0,0,1),Color(1,0,1),Color(1,1,0)};

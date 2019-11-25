@@ -80,26 +80,30 @@ struct KdTree
 				 {
 					 ids.push_back(node->id);
 				 }
+			}
 			
-
 	if(depth%3 == 0){
         if((cloud_point.x - Tol) < node->point.x) search_helper(cloud_point, node->left,ids, depth+1, Tol);
         if((cloud_point.x + Tol) > node->point.x) search_helper(cloud_point, node->right, ids, depth+1, Tol);
       }
-      else if(depth%3==1)
+    else if(depth%3 == 1)
+	{
         if((cloud_point.y - Tol) < node->point.y) search_helper(cloud_point, node->left, ids, depth+1, Tol);
         if((cloud_point.y + Tol) > node->point.y) search_helper(cloud_point, node->right, ids, depth+1, Tol);
       }
 
 	  else 
 	  {
-        if((cloud_point.y - Tol) < node->point.y) search_helper(cloud_point, node->left, ids, depth+1, Tol);
-        if((cloud_point.y + Tol) > node->point.y) search_helper(cloud_point, node->right, ids, depth+1, Tol);
+        if((cloud_point.z - Tol) < node->point.z) search_helper(cloud_point, node->left, ids, depth+1, Tol);
+        if((cloud_point.z + Tol) > node->point.z) search_helper(cloud_point, node->right, ids, depth+1, Tol);
       }
 		
-	}
+}
 
 	}
+
+
+
 
 	// return a list of cloud_point ids in the tree that are within distance of target
 	std::vector<int> search(pcl::PointXYZ target, float Tol)
