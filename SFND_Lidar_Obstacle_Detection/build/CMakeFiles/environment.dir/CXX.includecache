@@ -21,6 +21,8 @@ render/render.h
 /home/cedric/SFND/SFND_Lidar_Obstacle_Detection/src/render/render.h
 math.h
 -
+bits/stdc++.h
+/home/cedric/SFND/SFND_Lidar_Obstacle_Detection/src/bits/stdc++.h
 
 /home/cedric/SFND/SFND_Lidar_Obstacle_Detection/src/processPointClouds.cpp
 processPointClouds.h

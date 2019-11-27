@@ -3,34 +3,39 @@
 
 #include "render/render.h"
 #include <math.h>
+#include "bits/stdc++.h"
 
+
+template<typename PointT>
 // Structure to represent node of kd tree
 struct Node
 {
-	pcl::PointXYZ point;
+	PointT point;
 	int id;
-	Node* left;
+	Node<PointT>* left;
 	Node* right;
 
-	Node(pcl::PointXYZ arr, int setId)
+	Node(PointT arr, int setId)
 	:	point(arr), id(setId), left(NULL), right(NULL)
 	{}
 };
 
+template<typename PointT>
 struct KdTree
 {
-	Node* root;
+	Node<PointT>* root;
 
 	KdTree()
 	: root(NULL)
 	{}
     
-    void helper_insert(Node **node, pcl::PointXYZ cloud_point, int id,int depth){
+	
+    void helper_insert(Node<PointT> **node, PointT cloud_point, int id,int depth){
 		
 		//no root => Tree is completely empty 
 		if(*node == NULL) 
 		{
-			*node = new Node(cloud_point,id);
+			*node = new Node<PointT>(cloud_point,id);
 
 		}
 		else
@@ -57,7 +62,7 @@ struct KdTree
 		}
 	}
 
-	void insert(pcl::PointXYZ cloud_point, int id)
+	void insert( PointT  cloud_point, int id)
 	{    
 		// TODO: Fill in this function to insert a new cloud_point into the tree
 		// the function should create a new node and place correctly with in the root 
@@ -68,7 +73,9 @@ struct KdTree
 
 	
 
-	void search_helper(pcl::PointXYZ cloud_point, Node *node, std::vector<int> &ids, int depth, float Tol) 
+	
+
+	void search_helper( PointT cloud_point, Node<PointT> *node, std::vector<int> &ids, int depth, float Tol) 
 	{
 		if(node!=NULL)
 		{   //see if cloud_point is within Threshold
@@ -106,7 +113,7 @@ struct KdTree
 
 
 	// return a list of cloud_point ids in the tree that are within distance of target
-	std::vector<int> search(pcl::PointXYZ target, float Tol)
+	std::vector<int> search( PointT target, float Tol)
 	{   
 		std::vector<int> ids;
 		search_helper(target, root, ids, 0, Tol);
