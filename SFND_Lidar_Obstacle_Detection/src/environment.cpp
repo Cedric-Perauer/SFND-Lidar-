@@ -66,14 +66,14 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)
     KdTree<pcl::PointXYZ>* tree = new KdTree<pcl::PointXYZ>;
   
     for (int i=0; i<segmentCloud.first->points.size(); i++) 
-    	tree->insert(segmentCloud.first->points[i],i); 
+    	tree->insert(segmentCloud.first->points[i],i,3); 
     
 
     
    //std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> cloudClusters = Point_Processor.Clustering(segmentCloud.first,1.0,3,30);
 
    //TO-DO : own EC algorithm 
-   std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> cloudClusters = Point_Processor.euclideanCluster(segmentCloud.first, tree, 1.01,3, 30);
+   std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> cloudClusters = Point_Processor.euclideanCluster(segmentCloud.first, tree, 1.01,3, 30,3);
 
     int clusterId = 0; 
     std::vector<Color> colors = {Color(0,0,1),Color(1,0,1),Color(1,1,0)};
@@ -99,26 +99,26 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer, ProcessPointCloud
 
   // Experiment with the ? values and find what works best  
   pcl::PointCloud<pcl::PointXYZI>::Ptr filterCloud; 
-  filterCloud = pointProcessorI->FilterCloud(inputCloud, 0.3 , Eigen::Vector4f (-10, -6, -3, 1), Eigen::Vector4f (30, 7, 1, 1),Eigen::Vector4f (-1.5, -1.7, -1, 1), Eigen::Vector4f ( 2.6, 1.7, -0.4, 1));
+  filterCloud = pointProcessorI->FilterCloud(inputCloud, 0.3 , Eigen::Vector4f (-10, -6, -3, 1), Eigen::Vector4f (30, 7, 2, 1),Eigen::Vector4f (-2.0, -1.5, -2, 1), Eigen::Vector4f ( 2.7, 1.5, 0, 1));
  
 
     //std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr, pcl::PointCloud<pcl::PointXYZI>::Ptr> segmentCloud = pointProcessorI->SegmentPlane(filterCloud, 100, 0.2); //pcl Function for testing
-    std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr, pcl::PointCloud<pcl::PointXYZI>::Ptr> segmentCloud = pointProcessorI->RANSAC_Segmentation(filterCloud,100,0.19); 
+    std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr, pcl::PointCloud<pcl::PointXYZI>::Ptr> segmentCloud = pointProcessorI->RANSAC_Segmentation(filterCloud,100,0.2); 
 
     // renderPointCloud(viewer,segmentCloud.first,"obstCloud",Color(1,0,0));
-    // renderPointCloud(viewer,segmentCloud.second,"planeCloud",Color(0,1,0));
+    renderPointCloud(viewer,segmentCloud.second,"planeCloud",Color(0,1,0));
      
     KdTree<pcl::PointXYZI>* tree = new KdTree<pcl::PointXYZI>;
   
     for (int i=0; i<segmentCloud.first->points.size(); i++) 
-    	tree->insert(segmentCloud.first->points[i],i); 
+    	tree->insert(segmentCloud.first->points[i],i,3); 
     
 
     
-   //std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters = pointProcessorI->Clustering(segmentCloud.first,0.5,30,250);
+   //std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters = pointProcessorI->Clustering(segmentCloud.first,0.5,10,250);
 
    //TO-DO : own EC algorithm 
-   std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters = pointProcessorI->euclideanCluster(segmentCloud.first, tree, 0.6,30, 250);
+   std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters = pointProcessorI->euclideanCluster(segmentCloud.first, tree, 0.5,10, 200,3);
 
     int clusterId = 0; 
     std::vector<Color> colors = {Color(0,0,1),Color(1,0,1),Color(1,1,0)};

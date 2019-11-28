@@ -342,24 +342,24 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
 
 
 template<typename PointT>
-void ProcessPointClouds<PointT>::Proximity(int i,typename pcl::PointCloud<PointT>::Ptr cloud,std::vector<int> &cluster,std::vector<bool> &processed,KdTree<PointT>* tree,float distanceTol) 
+void ProcessPointClouds<PointT>::Proximity(int i,typename pcl::PointCloud<PointT>::Ptr cloud,std::vector<int> &cluster,std::vector<bool> &processed,KdTree<PointT>* tree,float distanceTol,int dim) 
 {
   processed[i] = true; //mark point as processed
   cluster.emplace_back(i);  //add index to cluster
-  std::vector<int> nearby = tree->search(cloud->points[i],distanceTol); // return a list of point ids in the tree that are within distance of target
+  std::vector<int> nearby = tree->search(cloud->points[i],distanceTol,dim); // return a list of point ids in the tree that are within distance of target
 
   //iterate through nearby points
   for(int idx : nearby)
   {
 	  if(!processed[idx])
-	     Proximity(idx,cloud,cluster,processed,tree, distanceTol);
+	     Proximity(idx,cloud,cluster,processed,tree, distanceTol,dim);
   }
 }
 
 
 
 template<typename PointT>
-std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::euclideanCluster(typename pcl::PointCloud<PointT>::Ptr cloud, KdTree<PointT>* tree, float distanceTol, int minSize, int maxSize)
+std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::euclideanCluster(typename pcl::PointCloud<PointT>::Ptr cloud, KdTree<PointT>* tree, float distanceTol, int minSize, int maxSize,int dim)
 
 {   auto startTime = std::chrono::steady_clock::now();
 
@@ -374,11 +374,11 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::e
 		{
 			std::vector<int> idx; //holds cluster cloud indeces 
             typename pcl::PointCloud<PointT>::Ptr Cluster (new pcl::PointCloud<PointT>);
-            Proximity(i,cloud,idx,processed,tree,distanceTol);
+            Proximity(i,cloud,idx,processed,tree,distanceTol,dim);
             
             if(idx.size()>=minSize && idx.size() <= maxSize)  //make sure cluster is within size boundaries
             {   
-                for(size_t j = 0; j <idx.size();j++)  //loop through points of cluster
+                for(int j = 0; j <idx.size();j++)  //loop through points of cluster
                 {
                     PointT point = cloud->points[idx[j]]; //pick out point from cluster
                     Cluster->push_back(point);
@@ -393,7 +393,7 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::e
 
             else
             {
-                for(size_t j = 0; j <idx.size();j++)  //loop through points of cluster
+                for(int j = 1; j <idx.size();j++)  //loop through points of cluster
                 {
                     processed[idx[j]] = false; 
                 }     
