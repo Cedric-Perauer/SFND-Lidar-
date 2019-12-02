@@ -18,6 +18,10 @@ struct Node
 	Node(PointT arr, int setId)
 	:	point(arr), id(setId), left(NULL), right(NULL)
 	{}
+
+	~Node(){
+
+	}
 };
 
 template<typename PointT>
@@ -26,16 +30,16 @@ struct KdTree
 	Node<PointT>* root;
 
 	KdTree()
-	: root(NULL)
+	: root(nullptr)
 	{}
     
 	void helper_insert(Node<PointT>** node,  PointT cloud_point, int id, int depth,int dim)
     { 
 	  //no root => Tree is completely empty 
-      if(*node == NULL)
+      if(*node == nullptr)
 	  { 
 		  
-		(*node) = new Node<PointT>(cloud_point, id);
+		(*node) = boost::make_shared<Node<PointT>>(cloud_point, id);
 
 	  }
       else
@@ -57,6 +61,7 @@ struct KdTree
         }
         
       }
+	  
     }
   
 	void insert(PointT cloud_point, int id,int dim)

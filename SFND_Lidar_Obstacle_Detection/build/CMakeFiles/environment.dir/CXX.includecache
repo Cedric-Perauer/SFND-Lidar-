@@ -15,6 +15,8 @@ processPointClouds.h
 /home/cedric/SFND/SFND_Lidar_Obstacle_Detection/src/processPointClouds.h
 processPointClouds.cpp
 /home/cedric/SFND/SFND_Lidar_Obstacle_Detection/src/processPointClouds.cpp
+typeinfo
+-
 
 /home/cedric/SFND/SFND_Lidar_Obstacle_Detection/src/kdtree.h
 render/render.h
