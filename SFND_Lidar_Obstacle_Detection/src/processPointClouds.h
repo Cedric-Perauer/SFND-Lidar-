@@ -52,9 +52,9 @@ public:
 
     std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> RANSAC_Segmentation(typename pcl::PointCloud<PointT>::Ptr cloud, int maxIterations, float distanceTol);
   
-    std::vector<typename pcl::PointCloud<PointT>::Ptr> euclideanCluster(typename pcl::PointCloud<PointT>::Ptr cloud, KdTree<PointT> *tree, float distanceTol, int minSize, int maxSize,int dim);
+    std::vector<typename pcl::PointCloud<PointT>::Ptr> euclideanCluster(typename pcl::PointCloud<PointT>::Ptr cloud, boost::shared_ptr<KdTree<PointT>> tree, float distanceTol, int minSize, int maxSize,int dim);
 
-    void Proximity(int i,typename pcl::PointCloud<PointT>::Ptr cloud,std::vector<int> &cluster,std::vector<bool> &processed,KdTree<PointT> *tree,float distanceTol, int dim) ;
+    void Proximity(int i,typename pcl::PointCloud<PointT>::Ptr cloud,std::vector<int> &cluster,std::vector<bool> &processed,boost::shared_ptr<KdTree<PointT>> tree,float distanceTol, int dim) ;
     
 };
 #endif /* PROCESSPOINTCLOUDS_H_ */

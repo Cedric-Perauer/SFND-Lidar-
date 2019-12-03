@@ -342,7 +342,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
 
 
 template<typename PointT>
-void ProcessPointClouds<PointT>::Proximity(int i,typename pcl::PointCloud<PointT>::Ptr cloud,std::vector<int> &cluster,std::vector<bool> &processed,KdTree<PointT> *tree,float distanceTol,int dim) 
+void ProcessPointClouds<PointT>::Proximity(int i,typename pcl::PointCloud<PointT>::Ptr cloud,std::vector<int> &cluster,std::vector<bool> &processed,boost::shared_ptr<KdTree<PointT>> tree,float distanceTol,int dim)
 {
   processed[i] = true; //mark point as processed
   cluster.emplace_back(i);  //add index to cluster
@@ -359,7 +359,7 @@ void ProcessPointClouds<PointT>::Proximity(int i,typename pcl::PointCloud<PointT
 
 
 template<typename PointT>
-std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::euclideanCluster(typename pcl::PointCloud<PointT>::Ptr cloud, KdTree<PointT> *tree, float distanceTol, int minSize, int maxSize,int dim)
+std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::euclideanCluster(typename pcl::PointCloud<PointT>::Ptr cloud, boost::shared_ptr<KdTree<PointT>> tree, float distanceTol, int minSize, int maxSize,int dim)
 
 {   auto startTime = std::chrono::steady_clock::now();
 

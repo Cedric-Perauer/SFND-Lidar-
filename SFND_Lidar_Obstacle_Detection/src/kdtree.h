@@ -12,34 +12,34 @@ struct Node
 {
 	PointT point;
 	int id;
-	Node<PointT>* left;
-	Node<PointT>* right;
+	boost::shared_ptr<Node<PointT>> left;
+	boost::shared_ptr<Node<PointT>> right;
 
 	Node(PointT arr, int setId)
 	:	point(arr), id(setId), left(NULL), right(NULL)
 	{}
 
 	~Node(){
-
+		std::cout << "destroyed Node" << std::endl;
 	}
 };
 
 template<typename PointT>
 struct KdTree
 {
-	Node<PointT>* root;
+	boost::shared_ptr<Node<PointT>> root;
 
 	KdTree()
 	: root(nullptr)
 	{}
     
-	void helper_insert(Node<PointT>** node,  PointT cloud_point, int id, int depth,int dim)
+	void helper_insert(boost::shared_ptr<Node<PointT>> *node,  PointT cloud_point, int id, int depth,int dim)
     { 
 	  //no root => Tree is completely empty 
       if(*node == nullptr)
 	  { 
 		  
-		(*node) = boost::make_shared<Node<PointT>>(cloud_point, id);
+		(*node) = boost::make_shared<Node<PointT>>(cloud_point, id); //to do
 
 	  }
       else
@@ -62,6 +62,7 @@ struct KdTree
         
       }
 	  
+	  
     }
   
 	void insert(PointT cloud_point, int id,int dim)
@@ -71,7 +72,7 @@ struct KdTree
 		helper_insert(&root, cloud_point, id, 0,dim);
 	}
 
-void searchHelper(PointT cloud_point, Node<PointT>* node, int depth, float distanceTol, std::vector<int>& ids,int dim)
+void searchHelper(PointT cloud_point, boost::shared_ptr<Node<PointT>> node, int depth, float distanceTol, std::vector<int>& ids,int dim)
 {
 	if(node != NULL)
     {
@@ -106,7 +107,7 @@ void searchHelper(PointT cloud_point, Node<PointT>* node, int depth, float dista
     searchHelper(cloud_point, root, 0, distanceTol, ids,dim);
 		return ids;
 	}
-	
+
 
 };
 

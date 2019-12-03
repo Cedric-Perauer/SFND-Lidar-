@@ -9,83 +9,7 @@
 #include "processPointClouds.cpp"
 #include <typeinfo>
 
-std::vector<Car> initHighway(bool renderScene, pcl::visualization::PCLVisualizer::Ptr& viewer)
-{
 
-    Car egoCar( Vect3(0,0,0), Vect3(4,2,2), Color(0,1,0), "egoCar");
-    Car car1( Vect3(15,0,0), Vect3(4,2,2), Color(0,0,1), "car1");
-    Car car2( Vect3(8,-4,0), Vect3(4,2,2), Color(0,0,1), "car2");	
-    Car car3( Vect3(-12,4,0), Vect3(4,2,2), Color(0,0,1), "car3");
-  
-    std::vector<Car> cars;
-    cars.push_back(egoCar);
-    cars.push_back(car1);
-    cars.push_back(car2);
-    cars.push_back(car3);
-
-    if(renderScene)
-    {
-        renderHighway(viewer);
-        egoCar.render(viewer);
-        car1.render(viewer);
-        car2.render(viewer);
-        car3.render(viewer);
-    }
-
-    return cars;
-}
-
-
-void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)
-{
-    // ----------------------------------------------------
-    // -----Open 3D viewer and display simple highway -----
-    // ----------------------------------------------------
-    
-    // RENDER OPTIONS
-    bool renderScene = false; //show scene of the street and cars or not
-    std::vector<Car> cars = initHighway(renderScene, viewer);
-    
-    Lidar *lidar_obj = new Lidar(cars,0);
-    pcl::PointCloud<pcl::PointXYZ>::Ptr inputCloud = lidar_obj->scan();
-    //renderPointCloud(viewer,cloud,"Input Cloud");
-  
-    ProcessPointClouds<pcl::PointXYZ> Point_Processor;  
-    //std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr, pcl::PointCloud<pcl::PointXYZ>::Ptr> segmentCloud = Point_Processor.SegmentPlane(inputCloud, 100, 0.2); //pcl Function for testing
-    std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr, pcl::PointCloud<pcl::PointXYZ>::Ptr> segmentCloud = Point_Processor.RANSAC_Segmentation(inputCloud,100,0.19); 
- 
-       
-
-    
-    renderPointCloud(viewer,segmentCloud.first,"obstCloud",Color(1,0,0));
-    renderPointCloud(viewer,segmentCloud.second,"planeCloud",Color(0,1,0));
-     
-
-    KdTree<pcl::PointXYZ>* tree = new KdTree<pcl::PointXYZ>;
-  
-    for (int i=0; i<segmentCloud.first->points.size(); i++) 
-    	tree->insert(segmentCloud.first->points[i],i,3); 
-    
-
-    
-   //std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> cloudClusters = Point_Processor.Clustering(segmentCloud.first,1.0,3,30);
-
-   std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> cloudClusters = Point_Processor.euclideanCluster(segmentCloud.first, tree, 1.01,3, 30,3);
-
-    int clusterId = 0; 
-    std::vector<Color> colors = {Color(0,0,1),Color(1,0,1),Color(1,1,0)};
-    
-    for(pcl::PointCloud<pcl::PointXYZ>::Ptr cluster:cloudClusters)  //loop through clusters
-    {
-        std::cout << "Cluster Size ";        
-        Point_Processor.numPoints(cluster);
-        renderPointCloud(viewer,cluster,"obstCloud"+std::to_string(clusterId),colors[clusterId]);
-        //render BB
-        Box box = Point_Processor.BoundingBox(cluster);
-        renderBox(viewer,box,clusterId);
-        ++clusterId;
-    }
-}
 
 
 void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer, boost::shared_ptr<ProcessPointClouds<pcl::PointXYZI>> pointProcessorI, const pcl::PointCloud<pcl::PointXYZI>::Ptr& inputCloud)
@@ -103,37 +27,35 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer, boost::shared_ptr
 
     
      
-    auto tree = boost::make_shared<KdTree<pcl::PointXYZI>>();
+    boost::shared_ptr<KdTree<pcl::PointXYZI>> tree = boost::make_shared<KdTree<pcl::PointXYZI>>();
     
 
 
     for (int i=0; i<segmentCloud.first->points.size(); i++) 
     	tree->insert(segmentCloud.first->points[i],i,3); 
     
-     renderPointCloud(viewer,segmentCloud.first,"obstCloud",Color(1,0,0));
+    renderPointCloud(viewer,segmentCloud.first,"obstCloud",Color(1,0,0));
     renderPointCloud(viewer,segmentCloud.second,"planeCloud",Color(0,1,0));
     
    //std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters = pointProcessorI->Clustering(segmentCloud.first,0.5,10,250);
 
-    // std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters = pointProcessorI->euclideanCluster(segmentCloud.first, tree, 0.5,10, 200,3);
+   std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters = pointProcessorI->euclideanCluster(segmentCloud.first, tree, 0.5,10, 200,3);
 
-    // int clusterId = 0; 
-    // std::vector<Color> colors = {Color(0,0,1),Color(1,0,1),Color(1,1,0)};
-    
-    // for(pcl::PointCloud<pcl::PointXYZI>::Ptr cluster:cloudClusters)  //loop through clusters
-    // {
-    //     std::cout << "Cluster Size ";        
-    //     pointProcessorI->numPoints(cluster);
-    //     renderPointCloud(viewer,cluster,"obstCloud"+std::to_string(clusterId),colors[clusterId]);
-    //     //render BB
-    //     Box box = pointProcessorI->BoundingBox(cluster);
-    //     renderBox(viewer,box,clusterId);
-    //     ++clusterId;
-    // }
+    int clusterId = 0;
+    std::vector<Color> colors = {Color(0,0,1),Color(1,0,1),Color(1,1,0)};
+
+    for(pcl::PointCloud<pcl::PointXYZI>::Ptr cluster:cloudClusters)  //loop through clusters
+    {
+         std::cout << "Cluster Size ";
+         pointProcessorI->numPoints(cluster);
+         renderPointCloud(viewer,cluster,"obstCloud"+std::to_string(clusterId),colors[clusterId]);
+         //render BB
+         Box box = pointProcessorI->BoundingBox(cluster);
+         renderBox(viewer,box,clusterId);
+         ++clusterId;
+    }
+
 }
-
-
-
 
 
 
@@ -189,6 +111,4 @@ int main (int argc, char** argv)
 
         viewer->spinOnce ();
 }
-
-    
 }
